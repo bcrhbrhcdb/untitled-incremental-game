@@ -1,14 +1,15 @@
-body{
+body {
     background-color: #090C02;
     margin: 20px;
     padding: 10px;
 }
 
-p, h1, a, h2, h3{
+p, h1, a, h2, h3 {
     color: white;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
-hr{
+
+hr {
     background-color: #A72608;
     width: auto;
     height: 5px;
@@ -16,7 +17,8 @@ hr{
     border-radius: 5px;
     padding: 5px;
 }
-fieldset{
+
+fieldset {
     background-color: #A72608;
     width: auto;
     height: auto;
@@ -26,7 +28,8 @@ fieldset{
     padding: 15px;
     text-align: center;
 }
-button{
+
+button {
     background-color: #090C02;
     border: none;
     border-radius: 5px;
@@ -38,13 +41,14 @@ button{
     color: #BBC5AA;
     font-weight: bolder;
 }
-button:hover{
+
+button:hover {
     background-color: #BBC5AA;
     color: #090C02;
     cursor: pointer;
 }
 
-.clicker{
+.buttonTypeOne {
     background-color: #A72608;
     border: none;
     border-radius: 5px;
@@ -56,16 +60,30 @@ button:hover{
     color: #E6EED6;
     font-weight: bolder;
 }
-ul{
+
+ul {
     color: white;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    text-align: left;
-    font-size: 25px;
-    padding: auto;
-    margin: 10px;
+    text-align: left; 
+    font-size: 25px; 
 }
-li{
-    margin: 10px;
-    padding: 5px;
-    font-weight: 200;
+
+li {
+   margin: 10px; 
+   padding: 5px; 
+   font-weight: 200; 
+}
+
+/* New Flexbox styles */
+.flex-container {
+   display: flex; 
+   justify-content: space-between; 
+   align-items: center; 
+}
+
+.click-area {
+   margin-right: none;
+}
+.seperateBuildingsAndUpgrades{
+    height: 105px;
 }
