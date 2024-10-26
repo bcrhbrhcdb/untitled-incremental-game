@@ -4,5 +4,20 @@
   },
   "dependencies": {
     "servor": "^4.0.2"
-  }
+  },
+  "name": "untitled-idle-game",
+  "description": "untitled clicker game, what do you expect.",
+  "version": "0.0.1",
+  "main": "script.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcrhbrhcdb/untitled-idle-game.git"
+  },
+  "author": "Alex",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bcrhbrhcdb/untitled-idle-game/issues"
+  },
+  "homepage": "https://github.com/bcrhbrhcdb/untitled-idle-game#readme"
 }
