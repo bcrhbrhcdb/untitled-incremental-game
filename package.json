@@ -12,12 +12,12 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bcrhbrhcdb/untitled-idle-game.git"
+    "url": "git+https://github.com/bcrhbrhcdb/untitled-incremental-game.git"
   },
   "author": "Alex",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bcrhbrhcdb/untitled-idle-game/issues"
+    "url": "https://github.com/bcrhbrhcdb/untitled-incremental-game/issues"
   },
-  "homepage": "https://github.com/bcrhbrhcdb/untitled-idle-game#readme"
+  "homepage": "https://github.com/bcrhbrhcdb/untitled-incremental-game#readme"
 }
