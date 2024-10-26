@@ -10,9 +10,27 @@
 </head>
 <body>
   <h1>Untitiled Idle Game</h1>
-  <p class="clickInfo">Clicks: <span id="clicksDisplay">0</span></p>
+  <fieldset>
+    <div class="buttonArea">
+    <button id="settings">Settings</button>
+    <button id="upgrades">Upgrades</button>
+    <button id="research" style="display: none;">Research</button>
+  </div>
+</fieldset>
+  
+  <main>
+    <br>
+   <div class="game" id="game" style="display: block;">
+    <p class="clickInfo">Clicks: <span id="clicksDisplay">0</span></p>
+    <button id="clicker">Click</button>
+    <br>
+    </div>
+    <div class="showSettingsAndOrUpgrades" id="showSettingsAndOrUpgrades" style="display: none;">
+    </div>
+  </main>
   <footer>
-    <a href="update-log.html" target="_blank">update-log</a>
+    <a href="update-log.html" target="_blank">Update-Log</a>
+    <p>v0.0.1</p>
   </footer>
  <script src="javascript/game/game.js" type="module"></script>
 </body>
