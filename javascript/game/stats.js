@@ -1,5 +1,5 @@
 // stats.js
-
+import { clicksPerSecondDisplay, clicksDisplay, amountPerClickDisplay } from "./upgradesAndBuildings";
 export const stats = {
     clicks: 0,
     totalClicks: 0,
@@ -17,37 +17,9 @@ export const stats = {
     usedCheats: false,
 };
 
-export let GAME_TICKS = 0; // Initialize game ticks
 
-// Function to apply passive income from upgrades and buildings
-export const applyPassiveIncome = () => {
-    stats.clicks += stats.clicksPerSecond; // Increment clicks by clicks per second
-    stats.totalClicks += stats.clicksPerSecond; // Increment total clicks
-
-    // Update UI displays
-    updateDisplay();
-};
-
-// Function to update the UI
-const updateDisplay = () => {
-    const clicksDisplay = document.getElementById("clicksDisplay");
-    const clicksPerSecondDisplay = document.getElementById("clicksPerSecondDisplay");
-
-    if (clicksDisplay) {
-        clicksDisplay.innerText = stats.clicks;
-    }
-    
-    if (clicksPerSecondDisplay) {
-        clicksPerSecondDisplay.innerText = stats.clicksPerSecond; // Ensure this shows the correct value
-    }
-};
-
-// Export the function to be used in gameLoop.js
-export const startGameLoop = () => {
-    setInterval(() => {
-        GAME_TICKS++; // Increment game ticks every 50 milliseconds (20 ticks per second)
-        if (GAME_TICKS % 20 === 0) { // Every 20 ticks, apply passive income
-            applyPassiveIncome();
-        }
-    }, 50); // Update every 50 milliseconds
-};
+function updateStats(){
+    clicksDisplay.innerText = stats.clicks;
+    clicksPerSecondDisplay.innerText = stats.clicksPerSecond;
+    amountPerClickDisplay.innerText = stats.amountPerClick;
+}
