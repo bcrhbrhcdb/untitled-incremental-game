@@ -1,5 +1,5 @@
 // stats.js
-import { clicksPerSecondDisplay, clicksDisplay, amountPerClickDisplay } from "./upgradesAndBuildings.js";
+import { clicksPerSecondDisplay, clicksDisplay,  } from "./upgradesAndBuildings.js";
 export const stats = {
     clicks: 0,
     totalClicks: 0,
@@ -21,5 +21,4 @@ export const stats = {
 function updateStats(){
     clicksDisplay.innerText = stats.clicks;
     clicksPerSecondDisplay.innerText = stats.clicksPerSecond;
-    amountPerClickDisplay.innerText = stats.amountPerClick;
 }
