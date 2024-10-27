@@ -1,36 +1,22 @@
 // gameLoop.js
 
 import { stats } from "./stats.js";
-import { totalClicksDisplay, updateBuildings } from "./upgradesAndBuildings.js";
 import { updateStats } from "./game.js";
-import {clicksPerSecondDisplay} from "./upgradesAndBuildings.js"
-const TICKS_PER_SECOND = 20;
-const TICK_INTERVAL = 1000 / TICKS_PER_SECOND; // 50ms
+import { updateBuildings } from "./upgradesAndBuildings.js";
 
-let tickCount = 0;
+const TICKS_PER_SECOND = 20;
+const TICK_INTERVAL = 1000 / TICKS_PER_SECOND;
 
 function gameTick() {
-    tickCount++;
-
-    // Handle passive income
+    // Update clicks based on clicksPerSecond
     stats.clicks += stats.clicksPerSecond / TICKS_PER_SECOND;
-    clicksPerSecondDisplay.innerText = stats.clicksPerSecond;
-    totalClicksDisplay.innerText += TICKS_PER_SECOND / TICKS_PER_SECOND;
     stats.totalClicks += stats.clicksPerSecond / TICKS_PER_SECOND;
 
-    // Update stats every tick
+    // Update UI
     updateStats();
-
-    // Check for new buildings every second (every 20 ticks)
-    if (tickCount % TICKS_PER_SECOND === 0) {
-        updateBuildings();
-    }
-
-    // Add any other per-tick logic here
+    updateBuildings();
 }
 
 export function startGameLoop() {
     setInterval(gameTick, TICK_INTERVAL);
 }
-
-export { TICKS_PER_SECOND, TICK_INTERVAL };

@@ -2,14 +2,22 @@
 
 import { stats } from './stats.js';
 import { buildings } from './upgradesAndBuildings.js';
+import { updateBuildings } from './upgradesAndBuildings.js';
 
 const SAVE_KEY = 'idleGameSave';
-const VERSION = '0.0.11'; // Make sure this matches your current game version
+const VERSION = '0.0.11';
 
 export function saveGame() {
     const saveData = {
         stats: stats,
-        buildings: buildings,
+        buildings: Object.entries(buildings).reduce((acc, [key, building]) => {
+            acc[key] = {
+                owned: building.owned,
+                value: building.value,
+                cost: building.cost
+            };
+            return acc;
+        }, {}),
         version: VERSION
     };
     
@@ -28,16 +36,12 @@ export function loadGame() {
         
         // Restore buildings and recalculate clicksPerSecond
         let newClicksPerSecond = 0;
-        Object.keys(parsedData.buildings).forEach(key => {
+        Object.entries(parsedData.buildings).forEach(([key, savedBuilding]) => {
             if (buildings[key]) {
-                const savedBuilding = parsedData.buildings[key];
-                const currentBuilding = buildings[key];
-                
-                // Update owned count
-                currentBuilding.owned = savedBuilding.owned;
-                
-                // Recalculate clicksPerSecond with new value
-                newClicksPerSecond += currentBuilding.value * currentBuilding.owned;
+                buildings[key].owned = savedBuilding.owned;
+                buildings[key].value = savedBuilding.value;
+                buildings[key].cost = savedBuilding.cost;
+                newClicksPerSecond += buildings[key].value * buildings[key].owned;
             }
         });
         
@@ -55,5 +59,27 @@ export function loadGame() {
 
 export function clearSave() {
     localStorage.removeItem(SAVE_KEY);
-    console.log('Save data cleared');
+    resetGameState();
+    console.log('Save data cleared and game state reset');
+}
+
+export function resetGameState() {
+    // Reset stats
+    Object.keys(stats).forEach(key => {
+        if (typeof stats[key] === 'number') {
+            stats[key] = 0;
+        } else if (Array.isArray(stats[key])) {
+            stats[key] = [];
+        }
+    });
+    stats.amountPerClick = 1;
+
+    // Reset buildings
+    Object.values(buildings).forEach(building => {
+        building.owned = 0;
+        building.cost = building.initialCost || 20; // Assuming 20 is the default initial cost
+    });
+
+    // Update UI
+    updateBuildings();
 }

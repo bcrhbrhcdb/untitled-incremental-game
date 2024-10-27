@@ -1,14 +1,13 @@
 // stats.js
-import { clicksPerSecondDisplay, clicksDisplay,  } from "./upgradesAndBuildings.js";
 export const stats = {
     clicks: 0,
     totalClicks: 0,
-    clicksPerSecond: 0, // Set initial value for clicks per second
+    clicksPerSecond: 0,
     allTimeClicks: 0,
     totalRuns: 0,
-    upgrades: [], // Names of upgrades
+    upgrades: [],
     upgradesOwned: 0,
-    buildings: [], // Names of buildings
+    buildings: [],
     totalBuildings: 0,
     amountPerClick: 1,
     prestige: 0,
@@ -16,9 +15,3 @@ export const stats = {
     ascends: 0,
     usedCheats: false,
 };
-
-
-function updateStats(){
-    clicksDisplay.innerText = stats.clicks;
-    clicksPerSecondDisplay.innerText = stats.clicksPerSecond;
-}

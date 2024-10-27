@@ -5,7 +5,7 @@ import { updateStats } from "./game.js";
 
 export const clicksPerSecondDisplay = document.getElementById("clicksPerSecondDisplay");
 export const clicksDisplay = document.getElementById("clicksDisplay");
-export const totalClicksDisplay = document.getElementById("totalClicksDisplay")
+export const totalClicksDisplay = document.getElementById("totalClicksDisplay");
 const buildingArea = document.getElementById("buildingArea");
 
 export const buildings = {
@@ -20,9 +20,9 @@ export const buildings = {
 };
 
 const buildingFunctions = (building, buildingKey) => {
-    if (stats.clicks >= building.cost && !document.getElementById(buildingKey)) {
+    if (!document.getElementById(buildingKey)) {
         const newButton = document.createElement('button');
-        newButton.className = 'buttonTypeOne'
+        newButton.className = 'buttonTypeOne';
         newButton.id = buildingKey;
         newButton.innerHTML = `
             ${building.name}<br>
@@ -37,14 +37,18 @@ const buildingFunctions = (building, buildingKey) => {
                 building.owned++;
                 building.cost = Math.floor(building.cost * building.increaseInterval);
                 stats.upgradesOwned++;
-                stats.upgrades = building.name;
-                stats.clicksPerSecond += building.value; // Update clicksPerSecond
+                stats.totalBuildings++;
+                if (!stats.buildings.includes(building.name)) {
+                    stats.buildings.push(building.name);
+                }
+                stats.clicksPerSecond += building.value;
                 updateBuilding(buildingKey);
                 updateStats();
             }
         });
         buildingArea.appendChild(newButton);
     }
+    updateBuilding(buildingKey);
 };
 
 function updateBuilding(buildingKey) {
@@ -53,11 +57,19 @@ function updateBuilding(buildingKey) {
     if (buttonElement) {
         buttonElement.querySelector(`.${buildingKey}-owned`).textContent = building.owned;
         buttonElement.querySelector(`.${buildingKey}-cost`).textContent = building.cost.toFixed(0);
+        buttonElement.disabled = stats.clicks < building.cost;
     }
 }
 
 export function updateBuildings() {
     Object.entries(buildings).forEach(([key, building]) => {
-        buildingFunctions(building, key);
+        if (building.owned > 0 || stats.clicks >= building.cost) {
+            buildingFunctions(building, key);
+        } else {
+            const existingButton = document.getElementById(key);
+            if (existingButton) {
+                existingButton.remove();
+            }
+        }
     });
 }
