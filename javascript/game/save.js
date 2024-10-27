@@ -1,11 +1,11 @@
 // save.js
 
 import { stats } from './stats.js';
-import { buildings } from './upgradesAndBuildings.js';
+import { buildings, recalculateClicksPerSecond, updateBuildingValues } from './upgradesAndBuildings.js';
 import { updateBuildings } from './upgradesAndBuildings.js';
 
 const SAVE_KEY = 'idleGameSave';
-const VERSION = '0.0.11';
+const VERSION = '0.0.12';
 
 export function saveGame() {
     const saveData = {
@@ -13,7 +13,6 @@ export function saveGame() {
         buildings: Object.entries(buildings).reduce((acc, [key, building]) => {
             acc[key] = {
                 owned: building.owned,
-                value: building.value,
                 cost: building.cost
             };
             return acc;
@@ -34,19 +33,19 @@ export function loadGame() {
         // Restore stats
         Object.assign(stats, parsedData.stats);
         
-        // Restore buildings and recalculate clicksPerSecond
-        let newClicksPerSecond = 0;
+        // Restore buildings
         Object.entries(parsedData.buildings).forEach(([key, savedBuilding]) => {
             if (buildings[key]) {
                 buildings[key].owned = savedBuilding.owned;
-                buildings[key].value = savedBuilding.value;
                 buildings[key].cost = savedBuilding.cost;
-                newClicksPerSecond += buildings[key].value * buildings[key].owned;
+                // The 'value' property is not loaded from save data
+                // It will use the current value defined in the code
             }
         });
         
-        // Update clicksPerSecond with the new calculated value
-        stats.clicksPerSecond = newClicksPerSecond;
+        // Update building values and recalculate clicksPerSecond
+        updateBuildingValues();
+        recalculateClicksPerSecond();
         
         console.log('Game loaded successfully');
         console.log(`Clicks per second updated to: ${stats.clicksPerSecond}`);
@@ -80,6 +79,8 @@ export function resetGameState() {
         building.cost = building.initialCost || 20; // Assuming 20 is the default initial cost
     });
 
-    // Update UI
+    // Recalculate clicksPerSecond and update UI
+    recalculateClicksPerSecond();
     updateBuildings();
+    updateBuildingValues();
 }
