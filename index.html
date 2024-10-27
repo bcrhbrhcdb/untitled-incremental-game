@@ -24,35 +24,41 @@
     <div class="game" id="game" style="display: block;">
       <div class="flex-container">
         <div class="click-area">
+          <h2>Click Info</h2>
           <p class="clickInfo">Clicks: <span id="clicksDisplay">0</span></p>
           <p>Clicks Per Second: <span id="clicksPerSecondDisplay">0</span></p>
           <button id="clicker" class="buttonTypeOne">Click</button>
         </div>
-        <hr class="seperateBuildingsAndUpgrades" id="seperateBuildingsAndUpgrades" style="display: none;">
-        <div id="buildingArea" class="buildings" style="display: none;">
+        
+        <hr class="seperateBuildingsAndUpgrades" id="seperateBuildingsAndUpgrades" style="margin: 10px;">
+        
+        <div id="buildingArea" class="buildings">
           <h2>Buildings</h2>
-          <button>hi</button>
         </div>
       </div>
       <hr>
     </div>
 
-    <div class="showSettingsAndOrUpgrades" id="showSettingsAndOrUpgrades" style="display: none;">
       <div id="upgrade-area"></div>
-      <div id="setting-area"></div>
+      <div id="setting-area" style="display: none;">
+        <button id="saveButton" class="buttonTypeOne">Save Game</button>
+        <button id="clearSaveButton" class="buttonTypeOne">Clear Save Data</button>
+        <p class="totalClickInfo">Total Clicks: <span id="totalClicksDisplay">0</span></p>
+        <p>Amount Per Click: <span id="amountPerClickDisplay">1</span></p>
+        <button id="closeSettings" class="buttonTypeOne">Close Settings</button>
     </div>
   </main>
 
   <footer>
     <a href="update-log.html" target="_blank">Update-Log</a>
-    <p>v0.0.1</p>
-    <p>Amount Per Click: <span id="amountPerClickDisplay">1</span></p>
+    <p>v0.0.11</p>
   </footer>
 
   <script src="javascript/game/game.js" type="module"></script>
   <script src="javascript/game/upgradesAndBuildings.js" type="module"></script>
   <script src="javascript/game/stats.js" type="module"></script>
-  
+  <script src="javascript/game/settings.js" type="module"></script>
+
 
 </body>
 </html>

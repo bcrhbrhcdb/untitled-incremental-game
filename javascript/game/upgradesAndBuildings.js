@@ -1,46 +1,34 @@
+// upgradesAndBuildings.js
+
 import { stats } from "./stats.js";
 import { updateStats } from "./game.js";
 
 export const clicksPerSecondDisplay = document.getElementById("clicksPerSecondDisplay");
 export const clicksDisplay = document.getElementById("clicksDisplay");
+export const totalClicksDisplay = document.getElementById("totalClicksDisplay")
 const buildingArea = document.getElementById("buildingArea");
-
-export const buildingTYPES = {
-    PASSIVE: (building) => {
-        stats.clicksPerSecond += building.value;
-        updateStats();
-    }
-};
 
 export const buildings = {
     autoClicker: {
         name: "Auto Clicker",
         cost: 20,
-        value: 0.2,
+        value: 0.25,
         owned: 0,
-        increaseInterval: 1.093,
-        type: buildingTYPES.PASSIVE
+        increaseInterval: 1.093
     }
-};
-
-export const makePassiveIncome = () => {
-    setTimeout(() => {
-        stats.clicks += stats.clicksPerSecond;
-        updateStats();
-        updateBuildings();
-        makePassiveIncome();
-    }, 1000);
+    // Add more buildings here
 };
 
 const buildingFunctions = (building, buildingKey) => {
     if (stats.clicks >= building.cost && !document.getElementById(buildingKey)) {
         const newButton = document.createElement('button');
+        newButton.className = 'buttonTypeOne'
         newButton.id = buildingKey;
         newButton.innerHTML = `
             ${building.name}<br>
             Owned: <span class="${buildingKey}-owned">${building.owned}</span><br>
             Costs: <span class="${buildingKey}-cost">${building.cost.toFixed(0)}</span><br>
-            Gives: ${building.value} per second
+            Gives: ${building.value.toFixed(2)} per second
         `;
 
         newButton.addEventListener("click", () => {
@@ -49,7 +37,8 @@ const buildingFunctions = (building, buildingKey) => {
                 building.owned++;
                 building.cost = Math.floor(building.cost * building.increaseInterval);
                 stats.upgradesOwned++;
-                building.type(building);
+                stats.upgrades = building.name;
+                stats.clicksPerSecond += building.value; // Update clicksPerSecond
                 updateBuilding(buildingKey);
                 updateStats();
             }
