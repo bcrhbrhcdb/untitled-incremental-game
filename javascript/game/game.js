@@ -7,6 +7,7 @@ import { saveGame, loadGame } from "./save.js";
 import { displayStats } from "./settings.js";
 import { checkUpgradeAvailability, setupUpgradesButton } from "./upgrades.js";
 import { checkResearchAvailability, setupResearchButton } from "./research.js";
+import { calculateOfflineProgress } from './offlineProgress.js'; // Importing offline progress calculation
 
 const clickButton = document.getElementById("clicker");
 const amountPerClickDisplay = document.getElementById("amountPerClickDisplay");
@@ -16,10 +17,10 @@ function addClicks() {
     stats.clicks += clickValue;
     stats.totalClicks += clickValue;
     stats.allTimeClicks += clickValue;
+
     updateStats();
     checkUpgradeAvailability();
     checkResearchAvailability();
-    checkBuildingAvailability();
 }
 
 export function updateStats() {
@@ -48,6 +49,26 @@ function checkBuildingAvailability() {
     });
 }
 
+function setupNavigationButtons() {
+    const buttons = ['settingsButton', 'upgradesButton', 'researchButton'];
+    const areas = ['setting-area', 'upgrade-area', 'research-area'];
+
+    buttons.forEach((buttonId, index) => {
+        const button = document.getElementById(buttonId);
+        button.addEventListener('click', () => {
+            areas.forEach((areaId, i) => {
+                const area = document.getElementById(areaId);
+                if (i === index) {
+                    area.style.display = 'block';
+                    area.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    area.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
 function initializeGame() {
     // Ensure stats are initialized
     if (typeof stats.clicks !== 'number') stats.clicks = 0;
@@ -59,15 +80,17 @@ function initializeGame() {
     if (typeof stats.totalBuildings !== 'number') stats.totalBuildings = 0;
     if (!Array.isArray(stats.researchCompleted)) stats.researchCompleted = [];
 
+    // Calculate offline progress at game start
+    calculateOfflineProgress();
+
     if (clickButton) {
         clickButton.addEventListener("click", addClicks);
     } else {
         console.error("Click button not found in the DOM");
     }
 
-    // Set up upgrades and research buttons
-    setupUpgradesButton();
-    setupResearchButton();
+    // Set up navigation buttons
+    setupNavigationButtons();
 
     // Initial setup
     if (loadGame()) {
@@ -75,17 +98,18 @@ function initializeGame() {
     } else {
         console.log("No saved game found, starting new game");
     }
+    
     updateStats();
     updateBuildings();
+    
     checkUpgradeAvailability();
     checkResearchAvailability();
-    checkBuildingAvailability();
-
+    
     // Start the game loop
     startGameLoop();
 
     // Auto-save every minute
-    setInterval(saveGame, 60000);
+    setInterval(saveGame, 20000); // Adjusted to save every minute
 }
 
 // Wait for the DOM to be fully loaded before initializing the game

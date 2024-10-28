@@ -2,7 +2,6 @@
 
 import { stats } from "./stats.js";
 import { updateStats, calculateManualClickValue } from "./game.js";
-import { buildingTypes } from "./types.js";
 import { TICKS_PER_SECOND } from "./gameLoop.js";
 
 export const clicksPerSecondDisplay = document.getElementById("clicksPerSecondDisplay");
@@ -10,6 +9,61 @@ export const clicksDisplay = document.getElementById("clicksDisplay");
 export const totalClicksDisplay = document.getElementById("totalClicksDisplay");
 const buildingArea = document.getElementById("buildingArea");
 export const upgradeArea = document.getElementById("upgrade-area");
+
+export const buildingTypes = {
+    PASSIVE: {
+        isPassive: true,
+        getValue: (building, individual = false) => {
+            if (individual) {
+                return building.value.baseValue;
+            }
+            return building.value.baseValue * building.owned;
+        }
+    },
+    SCALEWITHBUILDING: {
+        isPassive: true,
+        getValue: (building, individual = false) => {
+            const scalingBuilding = buildings[building.value.scalingBuilding];
+            if (scalingBuilding) {
+                const scaledValue = building.value.baseValue * Math.pow(1.1, scalingBuilding.owned);
+                if (individual) {
+                    return scaledValue;
+                }
+                return scaledValue * building.owned;
+            }
+            return 0;
+        }
+    },
+    ONMANUALCLICK: {
+        isPassive: false,
+        getValue: (building, individual = false) => {
+            if (individual) {
+                return building.value.baseValue;
+            }
+            return building.value.baseValue * building.owned;
+        }
+    },
+    EXPONENTIAL: {
+        isPassive: true,
+        getValue: (building, individual = false) => {
+            const value = building.value.baseValue * Math.pow(1.15, building.owned);
+            if (individual) {
+                return value;
+            }
+            return value * building.owned;
+        }
+    },
+    MULTIPLICATIVE: {
+        isPassive: true,
+        getValue: (building, individual = false) => {
+            const value = building.value.baseValue * (building.owned + 1);
+            if (individual) {
+                return value;
+            }
+            return value * building.owned;
+        }
+    }
+};
 
 export const buildings = {
     autoClicker: {
@@ -66,7 +120,21 @@ export const buildings = {
         owned: 0,
         costMultiplier: 1.25,
         multiplier: 1,
-        type: buildingTypes.PASSIVE,
+        type: buildingTypes.EXPONENTIAL,
+        unlocked: false
+    },
+    clickMultiplier: {
+        name: "Click Multiplier",
+        cost: 1000,
+        initialCost: 1000,
+        value: {
+            description: "Multiplies the value of all clicks.",
+            baseValue: 0.1,
+        },
+        owned: 0,
+        costMultiplier: 1.3,
+        multiplier: 1,
+        type: buildingTypes.MULTIPLICATIVE,
         unlocked: false
     }
 };

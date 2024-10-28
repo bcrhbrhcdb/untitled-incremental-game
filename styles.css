@@ -129,6 +129,7 @@ li {
 .research-button {
     position: relative;
     overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .research-progress-bar {
@@ -138,4 +139,23 @@ li {
     height: 5px;
     background-color: #4CAF50;
     transition: width 0.5s ease-in-out;
+}
+
+.research-cost-bar {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    height: 5px;
+    background-color: #FFA500;
+    transition: width 0.5s ease-in-out;
+}
+
+.research-caption {
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 20px;
 }

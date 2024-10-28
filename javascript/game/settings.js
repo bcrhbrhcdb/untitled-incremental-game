@@ -5,25 +5,15 @@ import { saveGame, clearSave } from "./save.js";
 import { updateStats } from "./game.js";
 import { resetBuildings } from "./upgradesAndBuildings.js";
 import { exportSave, importSave } from "./importExport.js";
+import { calculateOfflineProgress } from './offlineProgress.js';
 
-const settingsButton = document.getElementById("settings");
+const settingsButton = document.getElementById("settingsButton");
 const settingArea = document.getElementById("setting-area");
 const saveButton = document.getElementById("saveButton");
 const clearSaveButton = document.getElementById("clearSaveButton");
-const closeSettingsButton = document.getElementById("closeSettings");
 const exportSaveButton = document.getElementById("exportSaveButton");
 const importSaveButton = document.getElementById("importSaveButton");
 const importSaveInput = document.getElementById("importSaveInput");
-
-settingsButton.addEventListener("click", () => {
-    settingArea.style.display = "block";
-});
-
-closeSettingsButton.addEventListener("click", () => {
-    settingArea.style.display = "none";
-});
-
-// settings.js
 
 // Throttling function
 function throttle(func, limit) {
@@ -45,52 +35,64 @@ function throttle(func, limit) {
         }, limit - (Date.now() - lastRan));
       }
     }
-  }
-saveButton.addEventListener("click", () => {
-    saveGame();
-    alert("Game saved successfully!");
-});
+}
 
-clearSaveButton.addEventListener("click", () => {
-    if (confirm("Are you sure you want to clear your save data? This action cannot be undone.")) {
-        clearSave();
-        resetStats();
-        resetBuildings();
-        updateStats();
-        alert("Save data cleared successfully!");
-    }
-});
+export function setupSettingsButton() {
+    settingsButton.addEventListener("click", () => {
+        if (settingArea.style.display === "none") {
+            settingArea.style.display = "block";
+            settingArea.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            settingArea.style.display = "none";
+        }
+    });
 
-exportSaveButton.addEventListener("click", () => {
-    const saveString = exportSave();
-    const blob = new Blob([saveString], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'untitled_idle_game_save.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-});
+    saveButton.addEventListener("click", () => {
+        saveGame();
+        alert("Game saved successfully!");
+    });
 
-importSaveButton.addEventListener("click", () => {
-    importSaveInput.click();
-});
+    clearSaveButton.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear your save data? This action cannot be undone.")) {
+            clearSave();
+            resetStats();
+            resetBuildings();
+            updateStats();
+            alert("Save data cleared successfully!");
+        }
+    });
 
-importSaveInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const saveString = e.target.result;
-            if (importSave(saveString)) {
-                alert("Save data imported successfully!");
-            } else {
-                alert("Error importing save data. Please check the file and try again.");
-            }
-        };
-        reader.readAsText(file);
-    }
-});
+    exportSaveButton.addEventListener("click", () => {
+        const saveString = exportSave();
+        const blob = new Blob([saveString], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'untitled_idle_game_save.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+
+    importSaveButton.addEventListener("click", () => {
+        importSaveInput.click();
+    });
+
+    importSaveInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const saveString = e.target.result;
+                if (importSave(saveString)) {
+                    alert("Save data imported successfully!");
+                } else {
+                    alert("Error importing save data. Please check the file and try again.");
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
+}
 
 function resetStats() {
     Object.keys(stats).forEach(key => {
@@ -111,9 +113,8 @@ const throttledDisplayStats = throttle(function() {
     } else {
       console.log("Stats not fully initialized yet.");
     }
-  }, 2000); // 1000 ms (1 second) delay between logs
-  
-  // Replace the original displayStats function
-  export function displayStats() {
+}, 2000); // 2000 ms (2 seconds) delay between logs
+
+export function displayStats() {
     throttledDisplayStats();
-  }
+};

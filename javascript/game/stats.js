@@ -17,4 +17,5 @@ export const stats = {
     ascends: 0,
     usedCheats: false,
     researchCompleted: [],
+    offlineBoost: 0, // New property for offline boosts
 };
