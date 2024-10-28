@@ -1,13 +1,11 @@
-// save.js
+// importExport.js
 
 import { stats } from './stats.js';
 import { buildings, updateBuildings, recalculateClicksPerSecond } from './upgradesAndBuildings.js';
 import { updateStats } from './game.js';
+import { saveGame } from './save.js';
 
-const SAVE_KEY = 'idleGameSave';
-const VERSION = '0.0.12';
-
-export function saveGame() {
+export function exportSave() {
     const saveData = {
         stats: stats,
         buildings: Object.entries(buildings).reduce((acc, [key, building]) => {
@@ -17,24 +15,22 @@ export function saveGame() {
             };
             return acc;
         }, {}),
-        version: VERSION
+        version: '0.0.11'
     };
     
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
-    console.log('Game saved successfully');
+    const saveString = btoa(JSON.stringify(saveData));
+    return saveString;
 }
 
-export function loadGame() {
-    const savedData = localStorage.getItem(SAVE_KEY);
-    
-    if (savedData) {
-        const parsedData = JSON.parse(savedData);
+export function importSave(saveString) {
+    try {
+        const saveData = JSON.parse(atob(saveString));
         
         // Restore stats
-        Object.assign(stats, parsedData.stats);
+        Object.assign(stats, saveData.stats);
         
         // Restore buildings
-        Object.entries(parsedData.buildings).forEach(([key, savedBuilding]) => {
+        Object.entries(saveData.buildings).forEach(([key, savedBuilding]) => {
             if (buildings[key]) {
                 buildings[key].owned = savedBuilding.owned;
                 buildings[key].cost = savedBuilding.cost;
@@ -46,15 +42,13 @@ export function loadGame() {
         recalculateClicksPerSecond();
         updateStats();
         
-        console.log('Game loaded successfully');
+        // Save the imported data
+        saveGame();
+        
+        console.log('Save data imported successfully');
         return true;
-    } else {
-        console.log('No saved game found');
+    } catch (error) {
+        console.error('Error importing save data:', error);
         return false;
     }
-}
-
-export function clearSave() {
-    localStorage.removeItem(SAVE_KEY);
-    console.log('Save data cleared');
 }
