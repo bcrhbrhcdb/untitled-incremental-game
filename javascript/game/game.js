@@ -43,8 +43,8 @@ export function calculateManualClickValue() {
 function checkBuildingAvailability() {
     Object.entries(buildings).forEach(([key, building]) => {
         if (stats.totalClicks >= building.initialCost && !building.unlocked) {
-            building.unlocked = true;
-            updateBuildings();
+            building.unlocked = true; // Unlock the building
+            updateBuildings(); // Update the display of buildings
         }
     });
 }
@@ -100,10 +100,12 @@ function initializeGame() {
     }
     
     updateStats();
-    updateBuildings();
     
+    // Check availability for upgrades and buildings
     checkUpgradeAvailability();
-    checkResearchAvailability();
+    
+    // Check building availability to unlock and display them
+    checkBuildingAvailability();
     
     // Start the game loop
     startGameLoop();

@@ -27,7 +27,7 @@
           <h2>Click Info</h2>
           <p class="clickInfo">Clicks: <span id="clicksDisplay">0</span></p>
           <p>Clicks Per Second: <span id="clicksPerSecondDisplay">0</span></p>
-          <button id="clicker" class="">Click</button>
+          <button id="clicker" class="buttonTypeOne">Click</button>
         </div>
 
         <hr class="seperateBuildingsAndUpgrades" id="seperateBuildingsAndUpgrades" style="margin: 10px;">
@@ -57,7 +57,7 @@
 
     <div id="setting-area" style="display: none;">
       <h2>Settings</h2>
-      <button id="saveButton" class="">Save Game</button>
+      <button id="saveButton" class="buttonTypeOne">Save Game</button>
       <button id="clearSaveButton" class="buttonTypeOne">Clear Save Data</button>
       <button id="exportSaveButton" class="buttonTypeOne">Export Save</button>
       <button id="importSaveButton" class="buttonTypeOne">Import Save</button>
@@ -70,7 +70,6 @@
     <p>v0.0.13</p>
   </footer>
 
-  <script src="./javascript/game/codes.js" type="module"></script>
   <!-- Ensure correct paths for JS files -->
   <script src="./javascript/game/game.js" type="module"></script>
   <script src="./javascript/game/upgradesAndBuildings.js" type="module"></script>
@@ -78,7 +77,10 @@
   <script src="./javascript/game/settings.js" type="module"></script>
   <script src="./javascript/game/importExport.js" type="module"></script>
   <script src="./javascript/game/upgrades.js" type="module"></script>
-  <script src="./javascript/game/research.js" type="module"></script">
+  <script src="./javascript/game/research.js" type="module"></script>
+  
+  <!-- Add the script for handling codes -->
+  <script src="./javascript/game/code.js" type="module"></script>
 
 </body>
 </html>

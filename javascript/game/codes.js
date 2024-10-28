@@ -42,3 +42,35 @@ export function applyCode(codeKey) {
     alert(`Applied ${code.description}`);
     return true; // Return true if the code was successfully applied
 }
+
+// Handle applying codes from the input field
+const applyCodeButton = document.getElementById('applyCodeButton');
+const codeInput = document.getElementById('codeInput');
+const codeMessage = document.getElementById('codeMessage');
+
+applyCodeButton.addEventListener('click', () => {
+    const code = codeInput.value.trim();
+    
+    if (code) {
+        const result = applyCode(code); // Function to apply the code
+        if (result) {
+            codeMessage.innerText = `Code applied successfully!`;
+        } else {
+            codeMessage.innerText = `Invalid code or already used.`;
+        }
+    } else {
+        codeMessage.innerText = `Please enter a valid code.`;
+    }
+});
+
+// Function to show/hide the codes area
+function toggleCodesArea() {
+    const codesArea = document.getElementById('codes-area');
+    codesArea.style.display = codesArea.style.display === 'none' ? 'block' : 'none';
+}
+
+// Add event listener to toggle codes area when the button is clicked
+document.getElementById('codes').addEventListener('click', () => {
+    console.log("Codes button clicked"); // Debugging log
+    toggleCodesArea();
+});
