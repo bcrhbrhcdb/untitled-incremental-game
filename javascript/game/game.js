@@ -109,7 +109,7 @@ function initializeGame() {
     startGameLoop();
 
     // Auto-save every minute
-    setInterval(saveGame, 20000); // Adjusted to save every minute
+    setInterval(saveGame, 60000); // Adjusted to save every minute
 }
 
 // Wait for the DOM to be fully loaded before initializing the game

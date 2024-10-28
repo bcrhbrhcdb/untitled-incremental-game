@@ -119,3 +119,20 @@ function applyUpgrade(upgrade) {
    }
 }
 
+// Function to set up upgrades button functionality
+export function setupUpgradesButton() {
+   const upgradesButton = document.getElementById('upgradesButton');
+   const upgradeArea = document.getElementById('upgrade-area');
+
+   upgradesButton.addEventListener('click', () => {
+      if (upgradeArea.style.display === 'none') {
+          upgradeArea.style.display = 'block';
+          upgradeArea.scrollIntoView({ behavior: 'smooth' });
+      } else {
+          upgradeArea.style.display = 'none';
+      }
+      
+      checkUpgradeAvailability(); // Check for available upgrades when opened
+   });
+}
+

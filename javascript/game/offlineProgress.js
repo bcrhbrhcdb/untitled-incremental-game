@@ -11,16 +11,18 @@ export function calculateOfflineProgress() {
         const timeOffline = Math.floor((currentTime - lastLoginTime) / 1000); // in seconds
         const clicksPerSecond = calculateClicksPerSecond();
         
-        // Calculate total clicks earned while offline, applying any boosts
-        const totalClicksEarned = clicksPerSecond * timeOffline * (1 + (stats.offlineBoost || 0));
+        // Only calculate offline earnings if the offline boost is purchased
+        if (stats.offlineBoost > 0) {
+            const totalClicksEarned = clicksPerSecond * timeOffline * (1 + stats.offlineBoost);
 
-        stats.clicks += totalClicksEarned; 
-        stats.totalClicks += totalClicksEarned;
+            stats.clicks += totalClicksEarned; 
+            stats.totalClicks += totalClicksEarned;
 
-        // Show popup notification
-        alert(`You've earned ${totalClicksEarned.toFixed(2)} clicks while you were offline! 
-               Time away: ${timeOffline} seconds.
-               Offline Earnings Boost Applied: ${(stats.offlineBoost || 0) * 100}%`);
+            // Show popup notification
+            alert(`You've earned ${totalClicksEarned.toFixed(2)} clicks while you were offline! 
+                   Time away: ${timeOffline} seconds.
+                   Offline Earnings Boost Applied: ${(stats.offlineBoost * 100).toFixed(2)}%`);
+        }
     }
 
     localStorage.setItem('lastLoginTime', currentTime);

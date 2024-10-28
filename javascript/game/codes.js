@@ -20,13 +20,13 @@ export const codes = {
 // Function to apply the boost
 export function applyCode(codeKey) {
     const code = codes[codeKey];
-    if (!code) return;
+    if (!code) return false; // Return false if the code doesn't exist
 
     const now = new Date();
     
     if (now > code.expirationDate) {
         alert("This code has expired.");
-        return;
+        return false; // Return false if the code has expired
     }
 
     if (code.gives !== null) {
@@ -40,4 +40,5 @@ export function applyCode(codeKey) {
     }
 
     alert(`Applied ${code.description}`);
+    return true; // Return true if the code was successfully applied
 }
