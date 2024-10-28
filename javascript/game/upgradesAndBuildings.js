@@ -87,17 +87,16 @@ export function onManualClick(calculateOnly = false) {
    let additionalClicks = 0;
    Object.values(buildings).forEach(building => { 
        if (building.type === buildingTypes.ONMANUALCLICK && building.unlocked) {
-           additionalClicks += building.type.getValue(building, false);
+           additionalClicks += building.type.getValue(building, false) * building.multiplier;
        }
    });
    if (!calculateOnly) {
-       stats.clicks += additionalClicks * stats.clickMultiplier;
-       stats.totalClicks += additionalClicks * stats.clickMultiplier;
-       
-      try {
-          updateStats();
-      } catch (error) {
-          console.error("Error updating stats after manual click:", error);
+      try{
+           stats.clicks += additionalClicks * stats.clickMultiplier;
+           stats.totalClicks += additionalClicks * stats.clickMultiplier;
+           updateStats();
+      } catch(error){
+           console.error("Error updating stats after manual click:", error);
       }
    }
    return additionalClicks * stats.clickMultiplier;
@@ -106,10 +105,9 @@ export function onManualClick(calculateOnly = false) {
 const buildingFunctions = (building, key) => {
    let buttonElement = document.getElementById(key);
    if (!buttonElement && building.unlocked) {
-       buttonElement = document.createElement('button');
-       buttonElement.className='buttonTypeOne'; 
-       buttonElement.id=key;
-       
+      buttonElement = document.createElement('button');
+      buttonElement.className='buttonTypeOne'; 
+      buttonElement.id=key;
       buttonElement.innerHTML=`
            <strong>${building.name}</strong> (<span class="${key}-owned">0</span>)
            <br>
@@ -120,20 +118,18 @@ const buildingFunctions = (building, key) => {
            Total:<span class="${key}-total">0</span> ${building.type.isPassive ? '/s' : ' per use'}
            <br>
            <small>${building.value.description}</small>
-       `;
-       
+      `;
       document.getElementById('buildingArea').appendChild(buttonElement);
       buttonElement.onclick=()=>{ 
-           if (stats.clicks >= Math.floor(building.cost)) { 
-               stats.clicks -= Math.floor(building.cost); 
-               building.owned++; 
-               building.cost *= Math.pow(building.costMultiplier, Math.floor(building.owned / 10)); 
-               updateBuilding(key);
-               updateStats(); 
-           } else {
-               console.error("Not enough clicks to purchase the building.");
-               alert("Not enough clicks to purchase this building."); 
-           }
+          if (stats.clicks >= Math.floor(building.cost)) { 
+              stats.clicks -= Math.floor(building.cost); 
+              building.owned++; 
+              building.cost *= Math.pow(building.costMultiplier, Math.floor(building.owned / 10)); 
+              updateBuilding(key);
+              updateStats(); 
+          } else {
+              alert("Not enough clicks to purchase this building.");
+          }
       };
       updateBuilding(key);
    }
