@@ -1,13 +1,11 @@
-// game.js
-
 import { stats } from "./stats.js";
 import { clicksDisplay, clicksPerSecondDisplay, totalClicksDisplay, updateBuildings, onManualClick, buildings } from "./upgradesAndBuildings.js";
 import { startGameLoop } from "./gameLoop.js";
 import { saveGame, loadGame } from "./save.js";
 import { displayStats } from "./settings.js";
-import { checkUpgradeAvailability, setupUpgradesButton } from "./upgrades.js";
-import { checkResearchAvailability, setupResearchButton } from "./research.js";
-import { calculateOfflineProgress } from './offlineProgress.js'; // Importing offline progress calculation
+import { checkUpgradeAvailability } from "./upgrades.js";
+import { checkResearchAvailability } from "./research.js";
+import { calculateOfflineProgress } from './offlineProgress.js';
 
 const clickButton = document.getElementById("clicker");
 const amountPerClickDisplay = document.getElementById("amountPerClickDisplay");
@@ -27,7 +25,7 @@ export function updateStats() {
     if (clicksDisplay) clicksDisplay.innerText = stats.clicks.toFixed(2);
     if (totalClicksDisplay) totalClicksDisplay.innerText = stats.totalClicks.toFixed(2);
     if (clicksPerSecondDisplay) clicksPerSecondDisplay.innerText = stats.clicksPerSecond.toFixed(2);
-    if (amountPerClickDisplay) amountPerClickDisplay.innerText = (stats.amountPerClick * stats.clickMultiplier + calculateManualClickValue()).toFixed(2);
+    if (amountPerClickDisplay) amountPerClickDisplay.innerText = (stats.amountPerClick * stats.clickMultiplier).toFixed(2);
     
     try {
         displayStats();
@@ -71,47 +69,47 @@ function setupNavigationButtons() {
 
 function initializeGame() {
     // Ensure stats are initialized
-    if (typeof stats.clicks !== 'number') stats.clicks = 0;
-    if (typeof stats.totalClicks !== 'number') stats.totalClicks = 0;
-    if (typeof stats.clicksPerSecond !== 'number') stats.clicksPerSecond = 0;
-    if (typeof stats.amountPerClick !== 'number') stats.amountPerClick = 1;
-    if (typeof stats.clickMultiplier !== 'number') stats.clickMultiplier = 1;
-    if (!Array.isArray(stats.buildings)) stats.buildings = [];
-    if (typeof stats.totalBuildings !== 'number') stats.totalBuildings = 0;
-    if (!Array.isArray(stats.researchCompleted)) stats.researchCompleted = [];
+    try {
+        if (typeof stats.clicks !== 'number') stats.clicks = 0;
+        if (typeof stats.totalClicks !== 'number') stats.totalClicks = 0;
+        if (typeof stats.clicksPerSecond !== 'number') stats.clicksPerSecond = 0;
+        if (typeof stats.amountPerClick !== 'number') stats.amountPerClick = 1;
+        if (typeof stats.clickMultiplier !== 'number') stats.clickMultiplier = 1;
 
-    // Calculate offline progress at game start
-    calculateOfflineProgress();
+        // Load game state
+        if (loadGame()) {
+            console.log("Game loaded successfully");
+            updateBuildings(); // Ensure buildings are shown after loading
+            recalculateClicksPerSecond(); // Recalculate CPS after loading
+            updateStats(); // Update UI after loading
+        } else {
+            console.log("No saved game found, starting new game");
+            updateBuildings(); // Show buildings initially
+            recalculateClicksPerSecond(); // Initialize CPS for new game
+            updateStats(); // Update UI for new game
+        }
 
-    if (clickButton) {
-        clickButton.addEventListener("click", addClicks);
-    } else {
-        console.error("Click button not found in the DOM");
+        // Calculate offline progress at game start
+        calculateOfflineProgress();
+
+        if (clickButton) {
+            clickButton.addEventListener("click", addClicks);
+        } else {
+            console.error("Click button not found in the DOM");
+        }
+
+        // Set up navigation buttons
+        setupNavigationButtons();
+
+        // Start the game loop
+        startGameLoop();
+
+        // Auto-save every minute
+        setInterval(saveGame, 60000); // Adjusted to save every minute
+
+    } catch (error) {
+        console.error("Error initializing game:", error);
     }
-
-    // Set up navigation buttons
-    setupNavigationButtons();
-
-    // Initial setup
-    if (loadGame()) {
-        console.log("Game loaded successfully");
-    } else {
-        console.log("No saved game found, starting new game");
-    }
-    
-    updateStats();
-    
-    // Check availability for upgrades and buildings
-    checkUpgradeAvailability();
-    
-    // Check building availability to unlock and display them
-    checkBuildingAvailability();
-    
-    // Start the game loop
-    startGameLoop();
-
-    // Auto-save every minute
-    setInterval(saveGame, 60000); // Adjusted to save every minute
 }
 
 // Wait for the DOM to be fully loaded before initializing the game

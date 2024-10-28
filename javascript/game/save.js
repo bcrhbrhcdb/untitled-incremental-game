@@ -1,60 +1,45 @@
-// save.js
-
 import { stats } from './stats.js';
-import { buildings, updateBuildings, recalculateClicksPerSecond } from './upgradesAndBuildings.js';
-import { updateStats } from './game.js';
-
-const SAVE_KEY = 'idleGameSave';
-const VERSION = '0.0.12';
+import { buildings } from './upgradesAndBuildings.js';
 
 export function saveGame() {
     const saveData = {
-        stats: stats,
-        buildings: Object.entries(buildings).reduce((acc, [key, building]) => {
-            acc[key] = {
-                owned: building.owned,
-                cost: building.cost
-            };
-            return acc;
-        }, {}),
-        version: VERSION
+        stats: { ...stats }, // Clone the stats object
+        buildings: Object.entries(buildings).reduce((acc, [key, building]) => ({
+            ...acc,
+            [key]: { owned: building.owned, cost: building.cost }
+        }), {}),
+        version: '0.0.13' // Update this version as needed
     };
-    
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
-    console.log('Game saved successfully');
+
+    localStorage.setItem('game_save', JSON.stringify(saveData));
 }
 
 export function loadGame() {
-    const savedData = localStorage.getItem(SAVE_KEY);
+    const saveDataString = localStorage.getItem('game_save');
     
-    if (savedData) {
-        const parsedData = JSON.parse(savedData);
+    if (!saveDataString) return false; // No saved game found
+
+    try {
+        const saveData = JSON.parse(saveDataString);
         
         // Restore stats
-        Object.assign(stats, parsedData.stats);
+        Object.assign(stats, saveData.stats);
         
         // Restore buildings
-        Object.entries(parsedData.buildings).forEach(([key, savedBuilding]) => {
+        Object.entries(saveData.buildings).forEach(([key, savedBuilding]) => {
             if (buildings[key]) {
                 buildings[key].owned = savedBuilding.owned;
                 buildings[key].cost = savedBuilding.cost;
             }
         });
         
-        // Update building values and recalculate clicksPerSecond
-        updateBuildings();
-        recalculateClicksPerSecond();
-        updateStats();
-        
-        console.log('Game loaded successfully');
-        return true;
-    } else {
-        console.log('No saved game found');
-        return false;
+        return true; // Successfully loaded
+    } catch (error) {
+        console.error('Error loading game:', error);
+        return false; // Failed to load
     }
 }
 
 export function clearSave() {
-    localStorage.removeItem(SAVE_KEY);
-    console.log('Save data cleared');
+    localStorage.removeItem('game_save');
 }
